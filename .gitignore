@@ -416,3 +416,5 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+ElsaServer/appsettings.json
+ElsaServer/appsettings.Development.json
