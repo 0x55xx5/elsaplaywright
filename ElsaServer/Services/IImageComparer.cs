@@ -29,35 +29,17 @@ public class ImageSharpComparer : IImageComparer
     {
         try
         {
-            using var targetImg = Image.Load<Rgba32>(targetBytes);
-            using var sourceImg = Image.Load<Rgba32>(sourceBytes);
+            using var targetStream = new System.IO.MemoryStream(targetBytes);
+            using var sourceStream = new System.IO.MemoryStream(sourceBytes);
 
-            // 第一階段：大小必須相符
-            if (targetImg.Width != sourceImg.Width || targetImg.Height != sourceImg.Height)
-            {
-                return new VisualMatchResult { IsMatch = false, Confidence = 0 };
-            }
+            // 進行比對
+            var result = Codeuctivity.ImageSharpCompare.ImageSharpCompare.CalcDiff(targetStream, sourceStream);
 
-            int diffPixels = 0;
-            int totalPixels = targetImg.Width * targetImg.Height;
+            // Codeuctivity.ImageSharpCompare 沒有內建提供 SSIM 屬性，
+            // 它提供的是 PixelErrorPercentage (0%~100%，0代表完全相同)。
+            // 我們可以將它轉換成 0~1 的相似度分數。
+            double similarity = 1.0 - (result.PixelErrorPercentage / 100.0);
 
-            for (int y = 0; y < targetImg.Height; y++)
-            {
-                for (int x = 0; x < targetImg.Width; x++)
-                {
-                    var p1 = targetImg[x, y];
-                    var p2 = sourceImg[x, y];
-
-                    // 簡單的 RGB 差異
-                    int diff = Math.Abs(p1.R - p2.R) + Math.Abs(p1.G - p2.G) + Math.Abs(p1.B - p2.B);
-                    if (diff > 30) // 容忍小幅顏色誤差
-                    {
-                        diffPixels++;
-                    }
-                }
-            }
-
-            double similarity = 1.0 - ((double)diffPixels / totalPixels);
             bool isMatch = similarity >= threshold;
 
             return new VisualMatchResult
@@ -67,6 +49,11 @@ public class ImageSharpComparer : IImageComparer
                 MatchX = 0,
                 MatchY = 0
             };
+        }
+        catch (Codeuctivity.ImageSharpCompare.ImageSharpCompareException)
+        {
+            // 例如長寬不符等錯誤
+            return new VisualMatchResult { IsMatch = false, Confidence = 0 };
         }
         catch (Exception)
         {

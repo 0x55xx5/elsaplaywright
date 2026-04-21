@@ -31,14 +31,14 @@ public class VisualVerifyActivity : CodeActivity
     [Input(Description = "截圖時的相對座標 (X, Y, Width, Height) - 供同事紀錄與後續確認使用")]
     public Input<string> RelativeCoordinates { get; set; } = default!;
 
-    [Input(Description = "信心閾值 (0.0 ~ 1.0)，例如 0.8 代表需要 80% 相似度才算成功")]
-    public Input<double> Threshold { get; set; } = new(0.8);
+    [Input(Description = "信心閾值 (0.0 ~ 1.0)，例如 0.95 代表需要 95% 相似度(SSIM)才算成功")]
+    public Input<double> Threshold { get; set; } = new(0.95);
 
     protected override async ValueTask ExecuteAsync(ActivityExecutionContext context)
     {
         var targetObj = TargetImageStream?.Get(context);
         var sourceObj = SourceImageStream?.Get(context);
-        var threshold = Threshold?.Get(context) ?? 0.8;
+        var threshold = Threshold?.Get(context) ?? 0.95;
 
         var targetBytes = GetBytes(targetObj);
         var sourceBytes = GetBytes(sourceObj);
