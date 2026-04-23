@@ -25,26 +25,30 @@ dotnet add package Elsa.Email
 
 https://myaccount.google.com/apppasswords
 
-Program.cs
+找到server 資料夾Program.cs
+加上
 
 ```
 .UseEmail(email => email.ConfigureOptions = options => configuration.GetSection("Smtp").Bind(options))
 ```
 
 
-C#
 
-```
 
+安裝證書https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-dev-certs
+
+dotnet dev-certs https --trust
 
 指定使用https
+
 ```
 dotnet run --urls "https://localhost:7238"
 ```
 
+C#
 
 ```
-        // Click the get started link.
+// Click the get started link.
  await Page.GetByRole(AriaRole.Link, new() { Name = "Get started" }).ClickAsync();
 ```
 
@@ -59,5 +63,12 @@ if (result && result.IsMatch) {
 } else {
     return "警報：畫面對比失敗！";
 }
- 
+```
+
+
+服務依賴注入
+
+```
+// Register custom services
+services.AddSingleton<IImageComparer, ImageSharpComparer>();
 ```
