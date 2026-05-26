@@ -1,15 +1,12 @@
-using Elsa.EntityFrameworkCore.Extensions;
-using Elsa.EntityFrameworkCore.Modules.Management;
-using Elsa.EntityFrameworkCore.Modules.Runtime;
-using Elsa.Extensions;  
+using Elsa.Persistence.EFCore.Extensions;
+using Elsa.Persistence.EFCore.Modules.Management;
+using Elsa.Persistence.EFCore.Modules.Runtime;
+using Elsa.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using ElsaServer.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseStaticWebAssets();
 
-// 改成監聽 HTTPS 的 Port
-builder.WebHost.UseUrls("https://localhost:7238");
 var services = builder.Services;
 var configuration = builder.Configuration;
 
@@ -36,9 +33,6 @@ services
 
 services.AddCors(cors => cors.AddDefaultPolicy(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().WithExposedHeaders("*")));
 services.AddRazorPages(options => options.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute()));
-
-// Register custom services
-services.AddSingleton<IImageComparer, ImageSharpComparer>();
 
 var app = builder.Build();
 
