@@ -418,3 +418,4 @@ FodyWeavers.xsd
 *.msp
 ElsaServer/appsettings.json
 ElsaServer/appsettings.Development.json
+ElsaServer/elsa.sqlite.db
