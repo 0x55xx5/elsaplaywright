@@ -419,3 +419,5 @@ FodyWeavers.xsd
 ElsaServer/appsettings.json
 ElsaServer/appsettings.Development.json
 ElsaServer/elsa.sqlite.db
+ElsaServer/elsa.sqlite.db-shm
+ElsaServer/elsa.sqlite.db-wal
