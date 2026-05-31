@@ -8,7 +8,7 @@ using Elsa.Workflows.Models;
 namespace ElsaServer.Activities
 {
     [Activity("TelegramBot", "Communication", "Sends a text message using a Telegram Bot via HTTP.")]
-    public class TelegramBotActivity : Activity
+    public class TelegramBotActivity : CodeActivity
     {
         [Input(Description = "The Telegram Bot Token.")]
         public Input<string> Token { get; set; } = default!;

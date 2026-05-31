@@ -8,7 +8,7 @@ using Microsoft.Playwright;
 namespace ElsaServer.Activities;
 
 [Activity(Category = "RPA.Vision", DisplayName = "Close Playwright Session", Description = "關閉並清理共用的 Playwright 資源。")]
-public class ClosePlaywrightSessionActivity : Activity
+public class ClosePlaywrightSessionActivity : CodeActivity
 {
     protected override async ValueTask ExecuteAsync(ActivityExecutionContext context)
     {

@@ -72,3 +72,13 @@ if (result && result.IsMatch) {
 // Register custom services
 services.AddSingleton<IImageComparer, ImageSharpComparer>();
 ```
+
+
+
+```
+ curl -k -X POST https://localhost:7238/workflows/webhooks/validate-promotion
+
+ https://localhost:7238/api/approve-promotion?correlationId=20746bed487f51b2
+
+ ```
+

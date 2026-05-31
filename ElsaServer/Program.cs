@@ -3,6 +3,8 @@ using Elsa.Persistence.EFCore.Modules.Management;
 using Elsa.Persistence.EFCore.Modules.Runtime;
 using Elsa.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
+using Microsoft.Extensions.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseStaticWebAssets();
@@ -34,6 +36,18 @@ services
 services.AddCors(cors => cors.AddDefaultPolicy(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().WithExposedHeaders("*")));
 services.AddRazorPages(options => options.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute()));
 
+// 忽略所有 HttpClient 的 SSL 憑證錯誤 (僅限本地測試使用)
+builder.Services.ConfigureAll<HttpClientFactoryOptions>(options =>
+{
+    options.HttpMessageHandlerBuilderActions.Add(b =>
+    {
+        b.PrimaryHandler = new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        };
+    });
+});
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -52,4 +66,14 @@ app.UseAuthorization();
 app.UseWorkflowsApi();
 app.UseWorkflows();
 app.MapFallbackToPage("/_Host");
+
+// --- Promotion Validation Dummy APIs ---
+// 1. API Validation Endpoint
+app.MapPost("/api/cart/calculate", () =>
+{
+    // 模擬算錢邏輯: 1200 * 0.9 - 100 = 980
+    return Results.Ok(new { finalPrice = 980m });
+});
+
+// ---------------------------------------
 app.Run();

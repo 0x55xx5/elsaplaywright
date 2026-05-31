@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>測試購物車驗收頁面</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f3f4f6; padding: 2rem; color: #333; }
+        .cart-container { max-width: 600px; margin: 0 auto; background: #fff; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .item { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 1rem; margin-bottom: 1rem; }
+        .promo-section { margin: 1.5rem 0; display: flex; gap: 10px; }
+        input { padding: 0.5rem; border: 1px solid #ccc; border-radius: 6px; flex: 1; }
+        button { padding: 0.5rem 1rem; background: #2563eb; color: #fff; border: none; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
+        button:hover { background: #1d4ed8; }
+        .summary { margin-top: 2rem; border-top: 2px solid #eee; padding-top: 1rem; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+        .total-row { font-size: 1.25rem; font-weight: bold; margin-top: 1rem; color: #111; }
+        .discount-tag { display: none; background: #ef4444; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; margin-left: 10px; }
+        .discount-row { display: none; color: #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="cart-container">
+        <h2>結帳明細 <span id="tag-discount" class="discount-tag">已套用促銷折扣</span></h2>
+        
+        <div class="item">
+            <span>高級吸塵器</span>
+            <span>$1,200</span>
+        </div>
+
+        <div class="promo-section">
+            <input type="text" id="couponCode" placeholder="輸入優惠碼 (PROMO100)">
+            <button id="applyCouponBtn" onclick="applyDiscount()">套用優惠碼</button>
+        </div>
+
+        <div class="summary">
+            <div class="summary-row">
+                <span>小計</span>
+                <span id="subtotal">$1,200</span>
+            </div>
+            <div id="row-discount1" class="summary-row discount-row">
+                <span>滿千打 9 折</span>
+                <span id="discount1Amount">-$120</span>
+            </div>
+            <div id="row-discount2" class="summary-row discount-row">
+                <span>特定優惠碼折抵</span>
+                <span id="discount2Amount">-$100</span>
+            </div>
+            <div class="summary-row total-row">
+                <span>總計</span>
+                <span id="totalPrice">$1,200</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function applyDiscount() {
+            const code = document.getElementById('couponCode').value;
+            let subtotal = 1200;
+            let total = subtotal;
+            let hasDiscount = false;
+
+            if (total >= 1000) {
+                document.getElementById('row-discount1').style.display = 'flex';
+                let discount1 = total * 0.1;
+                total -= discount1;
+                hasDiscount = true;
+            } else {
+                document.getElementById('row-discount1').style.display = 'none';
+            }
+
+            if (code === 'PROMO100') {
+                document.getElementById('row-discount2').style.display = 'flex';
+                total -= 100;
+                hasDiscount = true;
+            } else {
+                document.getElementById('row-discount2').style.display = 'none';
+            }
+
+            document.getElementById('totalPrice').innerText = '$' + total;
+            
+            if (hasDiscount) {
+                document.getElementById('tag-discount').style.display = 'inline-block';
+            }
+        }
+    </script>
+</body>
+</html>
