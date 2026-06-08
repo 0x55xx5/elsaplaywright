@@ -1,6 +1,6 @@
-Viewed docker-compose.yml:1-31
 
-這是一份為您的 Elsa Server 專案準備的 Docker 啟動與更新總結指南，您可以將這些指令記錄下來以便日後參考：
+
+Elsa Server 專案準備的 Docker 啟動與更新總結指南，您可以將這些指令記錄下來以便日後參考：
 
 ### 🚀 1. 首次啟動教學
 
@@ -53,3 +53,20 @@ docker-compose down
 # 停止容器，並且刪除資料庫的 Volume (資料將會永遠消失！)
 docker-compose down -v
 ```
+
+**檔案說明**
+`Dockerfile` 和 `docker-compose.yml` 扮演著不同的角色，兩者是完美搭配的：
+
+1. **`Dockerfile` (負責「如何製作」)**：
+   它就像是製作蛋糕的**食譜**。裡面定義了如何下載 .NET SDK、如何編譯您的 C# 程式碼 (`dotnet publish`)，以及最後要放在哪個乾淨的執行環境中。這決定了您專案本身的運作基礎。
+
+2. **`docker-compose.yml` (負責「如何管理」)**：
+   它就像是廚房的**總管**。在 `docker-compose.yml` 的 `elsa-server` 設定區塊中有一段：
+   ```yaml
+       build:
+         context: .
+         dockerfile: Dockerfile
+   ```
+   這段設定的意思就是：「請去讀取同一個目錄下的 `Dockerfile` 食譜，幫我把 Elsa Server 煮成一個可執行的應用程式映像檔 (Image)，然後把它跟 Postgres 資料庫一起同時啟動並連線。」
+
+所以，當您執行 `docker-compose up --build -d` 時，**系統會自動在背後呼叫您的 `Dockerfile` 來進行打包作業**。您不需要單獨去執行 `docker build` 命令，`docker-compose` 會幫您代勞一切！這兩份檔案都是不可或缺的。
